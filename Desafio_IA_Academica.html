@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desafío IA Académica</title>
+<style>
+  :root{
+    --bg-page:#EAF4FC;
+    --card:#FFFFFF;
+    --primary:#2E6DA4;
+    --primary-light:#5B9BD5;
+    --celeste:#75AADB;
+    --gold:#F6C453;
+    --success:#00b894;
+    --error:#e63946;
+    --text:#1B2A4A;
+    --muted:#5b6b82;
+    --border:#CFE3F5;
+    --note-bg:#FFF6E0;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background:linear-gradient(180deg,#DCEEFB 0%, #EAF4FC 40%, #DCEEFB 100%);
+    color:var(--text);
+    margin:0; padding:20px;
+    display:flex; justify-content:center; align-items:center;
+    min-height:100vh;
+  }
+  .game-container{
+    background:var(--card);
+    max-width:640px; width:100%;
+    padding:28px 30px 16px;
+    border-radius:18px;
+    box-shadow:0 14px 34px rgba(46,109,164,0.18);
+    border:2px solid var(--celeste);
+    position:relative;
+  }
+  h1{ text-align:center; color:var(--primary); margin:0 0 4px; font-size:1.7rem; }
+  .subtitle{ text-align:center; color:var(--muted); font-size:0.92rem; margin-bottom:14px; }
+  .score-board{ text-align:center; font-weight:bold; margin-bottom:6px; color:var(--primary); }
+  .progress{ text-align:center; font-size:0.82rem; color:var(--muted); margin-bottom:10px; }
+  .category-badge{
+    display:inline-block; background:var(--celeste); color:#fff; font-size:0.72rem;
+    font-weight:bold; padding:3px 10px; border-radius:20px; margin-bottom:10px; letter-spacing:0.5px;
+  }
+  .bonus-badge{ background:var(--gold); color:#1B2A4A; }
+  .scenario{
+    font-size:1.08rem; margin-bottom:18px; line-height:1.5;
+    background:#F2F8FD; padding:15px 16px; border-radius:10px;
+    border-left:4px solid var(--celeste);
+  }
+  .options{ display:flex; flex-direction:column; gap:12px; }
+  button{
+    background-color:var(--primary); color:#fff; border:none; padding:14px;
+    font-size:0.98rem; border-radius:10px; cursor:pointer; transition:all .2s ease; text-align:left;
+  }
+  button:hover{ background-color:var(--primary-light); transform:translateY(-2px); }
+  button:disabled{ cursor:default; }
+  .feedback{ display:none; margin-top:18px; padding:18px; border-radius:10px; line-height:1.6; }
+  .feedback.correct{ background:rgba(0,184,148,0.12); border:1px solid var(--success); }
+  .feedback.incorrect{ background:rgba(230,57,70,0.12); border:1px solid var(--error); }
+  .prompt-box{
+    background:#10243F; padding:14px 15px; border-radius:8px; font-family:Consolas, monospace;
+    font-size:0.86rem; margin-top:12px; border-left:4px solid var(--celeste); color:#FCE8A8;
+    white-space:pre-wrap; line-height:1.45;
+  }
+  .note-box{
+    background:var(--note-bg); border-left:4px solid var(--gold); padding:10px 13px;
+    border-radius:8px; margin-top:12px; font-size:0.85rem; color:#6b5212; line-height:1.45;
+  }
+  .next-btn{
+    background-color:var(--gold); color:#1B2A4A; font-weight:bold; text-align:center;
+    display:none; margin-top:16px; width:100%;
+  }
+  .next-btn:hover{ background-color:#FAD77A; }
+
+  /* Intro screen */
+  .intro-stat{
+    background:linear-gradient(135deg,#2E6DA4,#5B9BD5); color:#fff; border-radius:12px;
+    padding:18px 18px; text-align:center; margin:14px 0 16px;
+  }
+  .intro-stat .big{ font-size:2.6rem; font-weight:800; line-height:1; }
+  .intro-stat .lbl{ font-size:0.85rem; opacity:0.95; margin-top:6px; }
+  .intro-stat .src{ font-size:0.68rem; opacity:0.8; margin-top:8px; }
+  .intro-text{ font-size:0.95rem; line-height:1.55; margin-bottom:14px; }
+  .intro-text b{ color:var(--primary); }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 16px; justify-content:center; }
+  .chip{
+    background:#F2F8FD; border:1px solid var(--border); border-radius:8px; padding:8px 10px;
+    font-size:0.78rem; flex:1 1 30%; min-width:140px; text-align:center;
+  }
+  .chip b{ display:block; color:var(--primary); font-size:0.82rem; margin-bottom:2px; }
+  .start-btn{
+    background:var(--primary); color:#fff; font-weight:bold; padding:14px; border:none;
+    border-radius:10px; width:100%; font-size:1.02rem; cursor:pointer; margin-top:6px;
+  }
+  .start-btn:hover{ background:var(--primary-light); }
+  .pro-list{ font-size:0.85rem; line-height:1.6; margin:10px 0 0; padding-left:18px; }
+
+  .credit{ position:absolute; bottom:8px; right:16px; font-size:0.7rem; color:var(--muted); opacity:0.85; }
+  .end-card .scenario{ background:#F2F8FD; }
+</style>
+</head>
+<body>
+
+<div class="game-container">
+  <h1>🇦🇷 Desafío IA Académica</h1>
+  <div class="subtitle">Supervisá a la IA, no le delegués tu cabeza</div>
+  <div class="score-board" id="score"></div>
+  <div class="progress" id="progress"></div>
+
+  <div id="game-card">
+    <!-- intro screen se inyecta por JS -->
+  </div>
+
+  <div class="credit">Suyin Perdomo</div>
+</div>
+
+<script>
+const questions = [
+  {
+    category: "Lengua · Investigación",
+    text: "📚 SITUACIÓN 1: Tenés que entregar una monografía sobre el impacto ambiental del plástico mañana y no empezaste. ¿Cómo usás la IA?",
+    options: [
+      { text: "A) Le pido: 'Escribime una monografía de 3 páginas con introducción, desarrollo y bibliografía real'.", correct: false, feedback: "❌ ¡ERROR DE COPIÓN! Si hacés esto, la IA puede 'alucinar' inventando libros, autores y fuentes que no existen. Tu profesor lo va a notar al instante y vas a tener un problema por plagio y datos falsos." },
+      { text: "B) Uso un prompt estructurado para que actúe como asesor metodológico y me ayude a armar la estructura.", correct: true, feedback: "✅ ¡SUPERVISOR! Usás la IA para destrabar tu cabeza, no para que mienta por vos. Vos seguís siendo quien escribe e investiga." }
+    ],
+    prompt: `"Actuá como un asesor de investigación escolar. Tengo que armar una monografía sobre [Tema]. Quiero que por favor respondas: diseñá un índice sugerido con Introducción, 3 capítulos y Conclusión. Para cada sección, decime qué información específica debo buscar yo y qué palabras clave poner en Google Académico. Dame además un ejercicio extra: una pregunta de investigación que podría sorprender al profesor, y citá fuentes académicas confiables sobre el tema."`,
+    note: "🎓 Los docentes también usan IA: para preparar clases más didácticas y atractivas, para corregir exámenes, y -ojo- para detectar con software especializado qué textos no fueron escritos por una persona o están plagiados. La IA es una gran aliada para búsquedas amplias de fuentes académicas (revistas como Elsevier lo recomiendan) y para pensar la estructura de tu trabajo. Usala como ayuda, nunca para copiar: eso puede significar plagio o fraude académico."
+  },
+  {
+    category: "Matemática · Porcentajes",
+    text: "📐 SITUACIÓN 2: Tenés que calcular qué porcentaje de descuento te conviene en una oferta y no estás seguro del método.",
+    options: [
+      { text: "A) Le pido directamente el resultado final del cálculo y lo copio en la carpeta sin mirar cómo se hizo.", correct: false, feedback: "❌ ¡ERROR DE COPIÓN! El resultado solo no te sirve de nada: en el próximo ejercicio con otros números vas a estar perdido otra vez." },
+      { text: "B) Le pido que me muestre varias formas de calcular el mismo porcentaje y me explique cuál conviene usar en cada caso.", correct: true, feedback: "✅ ¡SUPERVISOR! Entender varios caminos para llegar al mismo resultado es lo que te permite elegir el más rápido en un examen." }
+    ],
+    prompt: `"Actuá como profesor de matemática de secundaria. Quiero aprender a calcular porcentajes de varias formas, usando este ejemplo: [poné tu número y porcentaje]. Quiero que por favor respondas: explicame 3 formas de calcularlo (regla de tres, multiplicando por el equivalente decimal, y el truco mental del 10%) paso a paso. Dame un ejercicio extra para practicar y citá una fuente académica confiable sobre el tema."`,
+    note: "📝 No aprendés matemática mirando explicaciones: la matemática se practica. En el examen no vas a tener el celular — la única forma de dominarla es resolver ejercicios con lápiz y papel."
+  },
+  {
+    category: "Historia",
+    text: "📝 SITUACIÓN 3: Tenés que leer un texto larguísimo de Historia de 20 páginas para un debate y te da mucha flojera.",
+    options: [
+      { text: "A) Le pido: 'Resumime este texto en tres párrafos' y leo solo eso.", correct: false, feedback: "❌ ¡ERROR DE COPIÓN! Esos resúmenes planos omiten fechas y nombres clave que tu profesor seguro va a meter en el examen. Te quedás con un conocimiento súper superficial." },
+      { text: "B) Le pido que procese el texto con técnicas de estudio activas: ideas clave + preguntas de autoevaluación.", correct: true, feedback: "✅ ¡SUPERVISOR! Usás la IA para masticar la información pesada, pero seguís siendo vos quien se autoevalúa y repasa." }
+    ],
+    prompt: `"Actuá como un tutor experto en técnicas de estudio. Te voy a pasar un texto. Quiero que por favor respondas en tres partes: 1) las 5 ideas centrales en viñetas cortas, 2) un glosario con las 3 palabras más difíciles explicadas simple, 3) 3 preguntas de opción múltiple para que yo me autoevalúe. Corregime cuando te responda y citá de qué tipo de fuente académica viene cada dato importante. Texto: [pegar texto acá]"`
+  },
+  {
+    category: "Física",
+    text: "🍏 SITUACIÓN 4: El profesor habla de la Ley de Gravedad y sentís que te habla en idioma alienígena. Las fórmulas no te hacen sentido.",
+    options: [
+      { text: "A) Dejo que la IA me resuelva toda la guía práctica de ejercicios al final del día.", correct: false, feedback: "❌ ¡ERROR DE COPIÓN! Resolver problemas mecánicamente sin entender el concepto es la receta perfecta para trabarte cuando el profesor cambie una sola variable en el pizarrón." },
+      { text: "B) Le pido que me explique la física con una analogía de la vida real antes de tocar los números.", correct: true, feedback: "✅ ¡SUPERVISOR! Bajás la teoría compleja a algo concreto, y después podés revisar si los ejercicios resueltos tienen sentido." }
+    ],
+    prompt: `"Actuá como un científico divulgador experto en física. No entiendo el concepto de [Tema] y me cuesta visualizarlo. Quiero que por favor respondas: explicámelo con una analogía del mundo real (videojuegos, deportes o autos), después explicame qué significa cada letra de la fórmula principal, y dame un ejercicio extra para practicar. Citá una fuente académica confiable."`
+  },
+  {
+    category: "Biología",
+    text: "🧬 SITUACIÓN 5: Tenés el parcial de Biología sobre fotosíntesis y los términos técnicos te marean.",
+    options: [
+      { text: "A) Pego el resumen de la primera página que encuentro en internet tal cual, palabra por palabra, en mi carpeta.", correct: false, feedback: "❌ ¡ERROR DE COPIÓN! Copiar texto ajeno sin entenderlo (y sin citarlo) no te prepara para el examen y puede ser plagio." },
+      { text: "B) Le pido que me explique el proceso paso a paso con una analogía y que después me tome una mini evaluación oral simulada.", correct: true, feedback: "✅ ¡SUPERVISOR! Entendiste el proceso Y te autoevaluaste para confirmar que realmente lo aprendiste." }
+    ],
+    prompt: `"Actuá como profesor de Biología de secundaria. Quiero entender [proceso, ej. la fotosíntesis]. Quiero que por favor respondas: explicámelo paso a paso con una analogía de la vida cotidiana, después hacéme 3 preguntas para autoevaluarme y corregime cuando te responda. Citá una fuente académica confiable (libro de texto o sitio .edu) al final."`
+  },
+  {
+    category: "Geografía",
+    text: "🗺️ SITUACIÓN 6: Tenés que ubicar y explicar las características de las regiones de tu país para Geografía.",
+    options: [
+      { text: "A) Le pido un cuadro con todos los datos ya resueltos y lo copio en mi carpeta sin mirarlo.", correct: false, feedback: "❌ ¡ERROR DE COPIÓN! Si no lo procesaste vos, en el mapa mudo del examen no vas a saber ni por dónde empezar." },
+      { text: "B) Le pido un resumen breve de cada región y después que me genere preguntas tipo trivia para autoevaluarme.", correct: true, feedback: "✅ ¡SUPERVISOR! Primero entendés, después te ponés a prueba: así se fija el conocimiento de verdad." }
+    ],
+    prompt: `"Actuá como profesor de Geografía. Quiero estudiar las regiones de [país]. Quiero que por favor respondas: dame primero un resumen breve de cada región (relieve, clima, economía), después generá 5 preguntas tipo trivia para que yo intente responder, corregime y agregá un dato curioso adicional. Citá fuentes académicas u oficiales confiables sobre el tema."`
+  },
+  {
+    category: "Inglés",
+    text: "🗣️ SITUACIÓN 7: Tenés un examen oral de inglés y necesitás practicar conversación, no solo traducir.",
+    options: [
+      { text: "A) Le pido que traduzca todo el texto del libro al español para entenderlo sin esforzarme en inglés.", correct: false, feedback: "❌ ¡ERROR DE COPIÓN! Traducir todo no te prepara para hablar ni para entender a alguien hablándote en inglés en el examen oral." },
+      { text: "B) Le pido que mantenga una conversación conmigo en inglés, corrigiendo mis errores de gramática.", correct: true, feedback: "✅ ¡SUPERVISOR! Practicaste el idioma de verdad: producir y corregir, no solo leer una traducción." }
+    ],
+    prompt: `"Act as a patient English teacher for a high school student. I want to practice conversation about [topic]. I want you to actually respond: have a short conversation with me in English, correct my grammar mistakes explaining why, and give me 3 new vocabulary words with example sentences from a reliable academic source."`
+  },
+  {
+    category: "Química",
+    text: "⚗️ SITUACIÓN 8: Tenés que balancear ecuaciones químicas para el examen y no entendés el método.",
+    options: [
+      { text: "A) Le pido que balancee todas las ecuaciones de la guía y copio los resultados.", correct: false, feedback: "❌ ¡ERROR DE COPIÓN! Sin entender el método, en el examen con una ecuación nueva vas a quedar igual de perdido." },
+      { text: "B) Le pido que me enseñe el método paso a paso con un ejemplo y después me deje intentar con las demás.", correct: true, feedback: "✅ ¡SUPERVISOR! Aprendiste el método con un caso y lo aplicaste sola/o en los siguientes: eso sí queda." }
+    ],
+    prompt: `"Actuá como profesor de Química de secundaria. Quiero aprender a balancear ecuaciones químicas. Quiero que por favor respondas: explicame el método paso a paso usando esta ecuación de ejemplo [poné la ecuación], después dame dos ecuaciones nuevas para que yo intente resolver y corregime explicando el porqué de cada coeficiente. Agregá una fuente académica confiable sobre el tema."`
+  },
+  {
+    category: "Literatura",
+    text: "📖 SITUACIÓN 9: Tenés que leer \u201CCien años de soledad\u201D de Gabriel García Márquez para Literatura y son muchas páginas.",
+    options: [
+      { text: "A) Le pido un resumen capítulo por capítulo y leo solo eso, sin abrir el libro.", correct: false, feedback: "❌ ¡ERROR DE COPIÓN! Te perdés el estilo, el realismo mágico y la experiencia de leer. Un resumen no es la novela: en un coloquio se nota enseguida quién leyó y quién no." },
+      { text: "B) Leo el libro y le pido ayuda para entender el árbol genealógico de los Buendía y el contexto histórico-cultural.", correct: true, feedback: "✅ ¡SUPERVISOR Y LECTOR! Usaste la IA como acompañante de lectura, no como reemplazo del libro." }
+    ],
+    prompt: `"Actuá como profesor de Literatura. Estoy leyendo 'Cien años de soledad' de Gabriel García Márquez y me cuesta seguir el árbol genealógico de la familia Buendía. Quiero que por favor respondas: ayudame a armar un árbol genealógico simple de los personajes principales, explicame qué es el 'realismo mágico' con un ejemplo de la novela, y recomendame fuentes académicas confiables sobre la obra."`,
+    note: "📖 La IA nunca va a reemplazar leer un buen libro. No \u201Caprendés\u201D literatura: la leés. Leer sigue siendo clave para el conocimiento, y los libros no desaparecen — países como Japón están impulsando de nuevo la lectura masiva en papel. Usá la IA como acompañante de lectura, nunca como atajo para no leer."
+  },
+  {
+    category: "Bonus · Matemática (MCD)",
+    bonus: true,
+    text: "🧮 BONUS: Tenés que calcular el Máximo Común Divisor (MCD) de varios números para simplificar fracciones y no te acordás el método.",
+    options: [
+      { text: "A) Le pido el resultado final del MCD y lo escribo sin entender cómo se llegó a él.", correct: false, feedback: "❌ ¡ERROR DE COPIÓN! Un resultado sin método no te sirve cuando te den números distintos en el examen." },
+      { text: "B) Le pido que me muestre todas las formas de calcularlo y me deje practicar con un caso nuevo.", correct: true, feedback: "✅ ¡SUPERVISOR! Conocer varios métodos te permite elegir el más rápido según los números que te den." }
+    ],
+    prompt: `"Actuá como profesor de matemática. Quiero aprender a calcular el Máximo Común Divisor (MCD) de varios números, por ejemplo de [poné tus números]. Quiero que por favor respondas: explicame 3 formas de calcularlo (factorización en números primos, algoritmo de Euclides y listado de divisores comunes), mostrame paso a paso cada una con mi ejemplo, y al final dame un ejercicio nuevo con otros números para que yo lo resuelva y vos lo corrijas. Citá una fuente académica confiable."`,
+    note: "🧮 La matemática sin práctica no se aprende. Recordá: en clase no vas a tener el celular. Pedile siempre a la IA que te diseñe ejercicios nuevos sobre el tema, no solo que resuelva los tuyos."
+  },
+  {
+    category: "Bonus · Matemática (Plan de práctica)",
+    bonus: true,
+    text: "📆 BONUS: El parcial de matemática es en una semana y querés armar tu propio plan de práctica diaria.",
+    options: [
+      { text: "A) Le pido que resuelva toda la guía de ejercicios del libro para entregarla ya resuelta.", correct: false, feedback: "❌ ¡ERROR DE COPIÓN! Una guía resuelta por la IA no te deja ni un ejercicio practicado por vos." },
+      { text: "B) Le pido que diseñe una tabla de ejercicios progresivos, de fácil a difícil, para practicar cada día.", correct: true, feedback: "✅ ¡SUPERVISOR! Tenés un plan armado por la IA, pero quien resuelve y aprende sos vos, un poquito cada día." }
+    ],
+    prompt: `"Actuá como profesor de matemática y diseñador de planes de estudio. Tengo un examen de [tema, ej. funciones cuadráticas] en una semana. Quiero que por favor respondas: diseñá un plan de práctica de 5 días con 3 ejercicios por día, de menor a mayor dificultad, sin resolverlos todavía. Cuando yo te traiga mis respuestas cada día, corregime y ajustá la dificultad del día siguiente. Agregá al final una fuente académica confiable para repasar la teoría."`,
+    note: "📆 Practicar un poco todos los días rinde más que un maratón la noche anterior. La IA puede diseñar tu plan, pero quien resuelve los ejercicios con lápiz y papel sos vos."
+  }
+];
+
+let currentQuestionIdx = -1; // -1 = pantalla de intro
+
+function renderIntro(){
+  document.getElementById("score").innerText = "";
+  document.getElementById("progress").innerText = "";
+  document.getElementById("game-card").innerHTML = `
+    <div class="intro-stat">
+      <div class="big">66%</div>
+      <div class="lbl">de los chicos y chicas de 9 a 17 años en Argentina ya usa IA para resolver tareas escolares</div>
+      <div class="src">Fuente: Encuesta Kids Online Argentina (UNICEF/UNESCO) e informe de Argentinos por la Educación y MIT, 2026</div>
+    </div>
+    <div class="intro-text">
+      El mismo informe advierte que el principal riesgo <b>no es usar IA</b>: es usarla para <b>terminar la tarea sin entenderla ni practicarla</b>.
+      <br><br>
+      La idea de este desafío no es resolver la tarea sin aprender. La IA ya se convirtió en una <b>operadora de tareas</b>: calcula, redacta, resume, traduce. Pero para poder <b>supervisarla</b> -y que no te lleve por delante- necesitás seguir aprendiendo: practicar matemática, leer literatura, verificar fuentes.
+      <br><br>
+      Así trabajan hoy los profesionales: un <b>programador</b> ya no escribe código desde cero, lo <b>revisa</b>. Un <b>diseñador</b> ya no dibuja todo a mano, <b>corrige y mejora</b> lo que propone la IA. Un <b>auditor</b> verifica que la información sea correcta. Un <b>abogado</b> verifica las fuentes jurídicas y argumenta. Vos vas a entrenarte para ser supervisor de tu propio aprendizaje.
+    </div>
+    <div class="chips">
+      <div class="chip"><b>Rol</b>"Actuá como profesor de..."</div>
+      <div class="chip"><b>Contexto</b>"Estoy en 4to año y..."</div>
+      <div class="chip"><b>Tarea</b>"Explicáme y dame un ejercicio"</div>
+      <div class="chip"><b>Restricción</b>"Quiero que por favor respondas, explicá paso a paso y citá fuente académica"</div>
+    </div>
+    <button class="start-btn" onclick="startGame()">Empezar el Desafío 🚀</button>
+  `;
+}
+
+function updateProgress(){
+  document.getElementById("progress").innerText = `Desafío ${currentQuestionIdx + 1} de ${questions.length}`;
+}
+
+function startGame(){
+  currentQuestionIdx = 0;
+  document.getElementById("score").innerText = "Nivel: Aprendiz de IA";
+  loadQuestion();
+}
+
+function loadQuestion(){
+  const q = questions[currentQuestionIdx];
+  updateProgress();
+  const badgeClass = q.bonus ? "category-badge bonus-badge" : "category-badge";
+  let html = `<div class="${badgeClass}">${q.bonus ? "⭐ " : ""}${q.category}</div>`;
+  html += `<div class="scenario">${q.text}</div>`;
+  html += `<div class="options" id="options-container"></div>`;
+  html += `<div class="feedback" id="feedback-box"></div>`;
+  html += `<button class="next-btn" id="next-button" onclick="nextQuestion()">Siguiente Desafío ➡️</button>`;
+  document.getElementById("game-card").innerHTML = html;
+
+  const optionsContainer = document.getElementById("options-container");
+  q.options.forEach((opt, idx) => {
+    const btn = document.createElement("button");
+    btn.innerText = opt.text;
+    btn.onclick = () => selectOption(idx);
+    optionsContainer.appendChild(btn);
+  });
+}
+
+function selectOption(idx){
+  const q = questions[currentQuestionIdx];
+  const opt = q.options[idx];
+  const feedbackBox = document.getElementById("feedback-box");
+
+  feedbackBox.style.display = "block";
+  feedbackBox.className = "feedback " + (opt.correct ? "correct" : "incorrect");
+
+  let htmlContent = `<p>${opt.feedback}</p>`;
+  htmlContent += `<strong>🛠️ LA FORMA CORRECTA DE USAR LA IA:</strong><div class="prompt-box">${q.prompt}</div>`;
+  if (q.note) htmlContent += `<div class="note-box">${q.note}</div>`;
+  feedbackBox.innerHTML = htmlContent;
+
+  document.getElementById("score").innerText = opt.correct ? "Nivel: Supervisor de IA 🔥" : "Nivel: ¡Cuidado con las alucinaciones! ⚠️";
+  document.getElementById("next-button").style.display = "block";
+  Array.from(document.querySelectorAll("#options-container button")).forEach(b => b.disabled = true);
+}
+
+function nextQuestion(){
+  currentQuestionIdx++;
+  if (currentQuestionIdx < questions.length){
+    loadQuestion();
+  } else {
+    document.getElementById("progress").innerText = "";
+    document.getElementById("score").innerText = "Nivel: Supervisor de IA 🏆";
+    document.getElementById("game-card").innerHTML = `
+      <div class="scenario end-card" style="text-align:center;">
+        🎉 ¡COMPLETASTE EL DESAFÍO IA!<br><br>
+        Ya sabés la diferencia entre copiar (y fallar) y <strong>supervisar (y aprender de verdad)</strong>.
+      </div>
+      <div class="intro-text">
+        Recordá: la IA está metida en lo cotidiano y no va a desaparecer. Tampoco los libros — leer sigue siendo insustituible para pensar mejor. La clave es la misma en cualquier profesión: <b>programador, diseñador, auditor o abogado</b>, todos están aprendiendo a revisar, corregir y verificar lo que la IA propone. Vos también podés empezar hoy.
+        <br><br>
+        <strong>Guardá estos prompts y usalos en tu próxima tarea.</strong>
+      </div>
+    `;
+  }
+}
+
+renderIntro();
+</script>
+</body>
+</html>
