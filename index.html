@@ -5,211 +5,498 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IA como Asistente de Aprendizaje — Matemática</title>
 <style>
-/* ─── TOKENS ─────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════
+   TOKENS — paleta extraída de la imagen
+═══════════════════════════════════════════════════════ */
 :root {
-  --bg:        #0B1929;
-  --surface:   #112238;
-  --card:      #162d45;
-  --border:    #1e4060;
-  --celeste:   #74B9E0;
-  --celeste-d: #2980b9;
-  --tiza:      #F0C040;
-  --verde:     #2ECC71;
-  --rojo:      #E74C3C;
-  --lila:      #9B59B6;
-  --naranja:   #E67E22;
-  --texto:     #D6EAF8;
-  --muted:     #7094a8;
-  --white:     #FFFFFF;
+  --teal-deep:   #071e26;
+  --teal-dark:   #0c2e3a;
+  --teal-mid:    #0e4a5c;
+  --teal-bright: #1a7a8a;
+  --cyan:        #4dd9ec;
+  --cyan-soft:   #8ee8f4;
+  --orange-warm: #e8673a;
+  --orange-glow: rgba(232, 103, 58, 0.25);
+  --orange-dim:  rgba(232, 103, 58, 0.10);
+  --white:       #ffffff;
+  --text-main:   #d4eef5;
+  --text-muted:  #6ba8ba;
+  --text-dim:    #3d7080;
+  --card-bg:     rgba(14, 74, 92, 0.35);
+  --card-border: rgba(77, 217, 236, 0.18);
+  --card-hover:  rgba(14, 74, 92, 0.6);
+  --yellow:      #f0c040;
+  --green:       #2ecc71;
+  --red:         #e74c3c;
 }
 
-/* ─── BASE ───────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+html { scroll-behavior: smooth; }
+
 body {
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--texto);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--teal-deep);
+  color: var(--text-main);
   min-height: 100vh;
-  line-height: 1.55;
+  line-height: 1.6;
+  overflow-x: hidden;
 }
 
-/* ─── HERO / HEADER ──────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════
+   HERO — fondo tipo imagen
+═══════════════════════════════════════════════════════ */
 .hero {
-  background: linear-gradient(160deg, #0d2137 0%, #0B1929 50%, #091520 100%);
-  border-bottom: 1px solid var(--border);
-  padding: 40px 20px 32px;
-  text-align: center;
   position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 20px 80px;
   overflow: hidden;
+  background:
+    radial-gradient(ellipse 55% 60% at 15% 45%, rgba(26,122,138,.45) 0%, transparent 65%),
+    radial-gradient(ellipse 35% 45% at 82% 22%, rgba(232,103,58,.28) 0%, transparent 55%),
+    radial-gradient(ellipse 25% 30% at 88% 75%, rgba(232,103,58,.15) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(7,30,38,.9) 0%, transparent 80%),
+    linear-gradient(150deg, #071e26 0%, #0c3545 35%, #0e4a5c 60%, #071e26 100%);
 }
+
+/* Partículas tipo bokeh animadas */
 .hero::before {
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(ellipse 60% 40% at 20% 50%, rgba(116,185,224,.08) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 60% at 80% 30%, rgba(240,192,64,.05) 0%, transparent 70%);
+  background-image:
+    radial-gradient(circle 3px at 20% 30%, rgba(77,217,236,.7) 0%, transparent 100%),
+    radial-gradient(circle 2px at 75% 15%, rgba(77,217,236,.5) 0%, transparent 100%),
+    radial-gradient(circle 2px at 55% 70%, rgba(77,217,236,.4) 0%, transparent 100%),
+    radial-gradient(circle 3px at 88% 55%, rgba(77,217,236,.6) 0%, transparent 100%),
+    radial-gradient(circle 1px at 35% 85%, rgba(77,217,236,.5) 0%, transparent 100%),
+    radial-gradient(circle 2px at 10% 60%, rgba(77,217,236,.4) 0%, transparent 100%),
+    radial-gradient(circle 1px at 65% 40%, rgba(142,232,244,.6) 0%, transparent 100%),
+    radial-gradient(circle 2px at 45% 20%, rgba(77,217,236,.3) 0%, transparent 100%),
+    radial-gradient(circle 1px at 92% 38%, rgba(77,217,236,.5) 0%, transparent 100%),
+    radial-gradient(circle 2px at 28% 55%, rgba(77,217,236,.3) 0%, transparent 100%);
+  pointer-events: none;
+  animation: twinkle 6s ease-in-out infinite alternate;
+}
+@keyframes twinkle {
+  0%   { opacity: .6; }
+  50%  { opacity: 1; }
+  100% { opacity: .7; }
+}
+
+/* Líneas de red geométrica */
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 300px; height: 200px;
+  background-image:
+    linear-gradient(135deg, rgba(77,217,236,.08) 1px, transparent 1px),
+    linear-gradient(45deg, rgba(77,217,236,.06) 1px, transparent 1px);
+  background-size: 40px 40px;
   pointer-events: none;
 }
+
+.hero-content { position: relative; z-index: 2; max-width: 700px; }
+
 .hero-eyebrow {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: .72rem;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 2.5px;
   text-transform: uppercase;
-  color: var(--celeste);
-  border: 1px solid rgba(116,185,224,.4);
-  border-radius: 20px;
-  padding: 4px 16px;
-  margin-bottom: 16px;
+  color: var(--cyan);
+  border: 1px solid rgba(77,217,236,.35);
+  border-radius: 30px;
+  padding: 6px 18px;
+  margin-bottom: 24px;
+  backdrop-filter: blur(4px);
+  background: rgba(77,217,236,.05);
 }
+.hero-eyebrow::before { content: '◈'; opacity: .7; }
+
 .hero h1 {
-  font-size: clamp(1.5rem, 5vw, 2.4rem);
-  font-weight: 800;
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.1;
   color: var(--white);
-  line-height: 1.15;
-  margin-bottom: 10px;
+  margin-bottom: 18px;
+  letter-spacing: -.5px;
 }
-.hero h1 span { color: var(--celeste); }
-.hero p {
-  color: var(--muted);
-  font-size: .93rem;
-  max-width: 520px;
-  margin: 0 auto 22px;
+.hero h1 .accent { color: var(--cyan); }
+.hero h1 .accent2 { color: var(--orange-warm); }
+
+.hero-sub {
+  font-size: 1rem;
+  color: var(--text-muted);
+  max-width: 480px;
+  margin: 0 auto 32px;
+  line-height: 1.65;
 }
+
 .hero-chips {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 8px;
+  margin-bottom: 40px;
 }
 .chip {
-  background: rgba(116,185,224,.12);
-  border: 1px solid rgba(116,185,224,.25);
+  background: rgba(77,217,236,.08);
+  border: 1px solid rgba(77,217,236,.2);
   border-radius: 20px;
-  padding: 5px 14px;
+  padding: 6px 16px;
   font-size: .78rem;
-  color: var(--celeste);
+  color: var(--cyan-soft);
   font-weight: 600;
+  backdrop-filter: blur(4px);
 }
 
-/* ─── STAT STRIP ─────────────────────────────────────── */
-.stat-strip {
-  background: linear-gradient(90deg, var(--celeste-d), var(--lila));
-  padding: 12px 24px;
+.scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 14px;
-  flex-wrap: wrap;
-  text-align: center;
+  gap: 6px;
+  font-size: .72rem;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  z-index: 2;
+  animation: bounce 2s ease-in-out infinite;
 }
-.stat-strip .num { font-size: 1.6rem; font-weight: 900; color: #fff; }
-.stat-strip .label { font-size: .82rem; color: #d6eaf8; line-height: 1.4; }
-.stat-strip .src { font-size: .7rem; color: rgba(255,255,255,.55); }
+.scroll-hint::after { content: '▼'; font-size: .6rem; }
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(6px); }
+}
 
-/* ─── LAYOUT ─────────────────────────────────────────── */
-.container { max-width: 820px; margin: 0 auto; padding: 0 16px; }
+/* ═══════════════════════════════════════════════════════
+   NAV STICKY
+═══════════════════════════════════════════════════════ */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(7,30,38,.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(77,217,236,.12);
+  padding: 0 20px;
+}
+.nav-inner {
+  max-width: 820px;
+  margin: 0 auto;
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 10px 0;
+}
+.nav-inner::-webkit-scrollbar { display: none; }
+.nav-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: .78rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 7px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .2s, color .2s;
+}
+.nav-btn:hover, .nav-btn.active {
+  background: rgba(77,217,236,.12);
+  color: var(--cyan);
+}
 
-/* ─── SECTION HEADERS ────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════
+   LAYOUT GENERAL
+═══════════════════════════════════════════════════════ */
+.container {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.section-wrap { padding: 56px 0 16px; }
+
 .section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.section-icon {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  border: 1px solid;
+}
+.section-header h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+.section-header p { font-size: .85rem; color: var(--text-muted); line-height: 1.5; }
+
+/* ═══════════════════════════════════════════════════════
+   INTRO CARDS — grid
+═══════════════════════════════════════════════════════ */
+.intro-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.intro-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 22px;
+  backdrop-filter: blur(6px);
+  transition: background .2s, transform .2s;
+}
+.intro-card:hover { background: var(--card-hover); transform: translateY(-2px); }
+.intro-card .ic-icon { font-size: 1.8rem; margin-bottom: 12px; }
+.intro-card h3 {
+  font-size: .92rem;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+.intro-card p { font-size: .82rem; color: var(--text-muted); line-height: 1.55; }
+
+/* ═══════════════════════════════════════════════════════
+   ALUCINACIONES — bloque especial
+═══════════════════════════════════════════════════════ */
+.alucinacion-block {
+  background: linear-gradient(135deg,
+    rgba(232,103,58,.12) 0%,
+    rgba(14,74,92,.4) 60%,
+    rgba(232,103,58,.06) 100%);
+  border: 1px solid rgba(232,103,58,.35);
+  border-radius: 16px;
+  padding: 28px;
+  margin: 14px 0;
+  position: relative;
+  overflow: hidden;
+}
+.alucinacion-block::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 150px; height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,103,58,.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.alu-header {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 36px 0 18px;
+  margin-bottom: 16px;
 }
-.section-icon {
-  width: 42px; height: 42px;
-  border-radius: 10px;
+.alu-icon {
+  font-size: 1.6rem;
+  width: 48px; height: 48px;
+  background: rgba(232,103,58,.15);
+  border: 1px solid rgba(232,103,58,.35);
+  border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.2rem;
   flex-shrink: 0;
 }
-.section-header h2 { font-size: 1.1rem; font-weight: 800; color: var(--white); }
-.section-header p { font-size: .82rem; color: var(--muted); margin-top: 2px; }
-
-/* ─── PROMPT CARD ────────────────────────────────────── */
-.prompt-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  margin-bottom: 16px;
-  overflow: hidden;
-  transition: box-shadow .2s;
+.alu-header h3 { font-size: 1.05rem; font-weight: 800; color: var(--orange-warm); }
+.alu-header p { font-size: .82rem; color: var(--text-muted); margin-top: 2px; }
+.alu-body { font-size: .88rem; color: var(--text-main); line-height: 1.65; margin-bottom: 18px; }
+.alu-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
 }
-.prompt-card:hover { box-shadow: 0 6px 28px rgba(0,0,0,.45); }
+.alu-ex {
+  display: flex;
+  gap: 10px;
+  background: rgba(0,0,0,.25);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: .82rem;
+  color: var(--text-muted);
+  border-left: 3px solid rgba(232,103,58,.5);
+}
+.alu-ex .ex-label {
+  font-weight: 700;
+  color: var(--orange-warm);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.verify-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(77,217,236,.08);
+  border: 1px solid rgba(77,217,236,.25);
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: .85rem;
+  color: var(--cyan-soft);
+  font-weight: 600;
+}
+.verify-strip .v-icon { font-size: 1.3rem; flex-shrink: 0; }
+
+/* ═══════════════════════════════════════════════════════
+   PROMPT ELEMENTS
+═══════════════════════════════════════════════════════ */
+.prompt-elements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.pe-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 16px;
+  transition: background .2s;
+}
+.pe-card:hover { background: var(--card-hover); }
+.pe-num {
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.pe-card h4 { font-size: .88rem; font-weight: 700; color: var(--white); margin-bottom: 5px; }
+.pe-card p { font-size: .77rem; color: var(--text-muted); line-height: 1.4; }
+.pe-card .pe-eg {
+  font-size: .73rem;
+  font-style: italic;
+  color: var(--cyan);
+  margin-top: 6px;
+  border-top: 1px solid rgba(77,217,236,.12);
+  padding-top: 6px;
+}
+
+.prompt-flow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  background: rgba(0,0,0,.25);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+  font-size: .82rem;
+}
+.pf-tag {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: .75rem;
+  white-space: nowrap;
+}
+.pf-arrow { color: var(--text-dim); font-size: .8rem; }
+
+/* ═══════════════════════════════════════════════════════
+   PROMPT CARDS (accordions)
+═══════════════════════════════════════════════════════ */
+.prompt-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  backdrop-filter: blur(6px);
+  transition: border-color .2s, box-shadow .2s;
+}
+.prompt-card:hover { border-color: rgba(77,217,236,.3); }
+.prompt-card.open { border-color: rgba(77,217,236,.35); box-shadow: 0 8px 32px rgba(0,0,0,.4); }
 
 .card-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
+  gap: 14px;
+  padding: 18px 20px;
   cursor: pointer;
   user-select: none;
 }
 .card-accent {
-  width: 38px; height: 38px;
-  border-radius: 9px;
+  width: 42px; height: 42px;
+  border-radius: 11px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   flex-shrink: 0;
+  border: 1px solid;
 }
-.card-meta { flex: 1; }
+.card-meta { flex: 1; min-width: 0; }
 .card-meta .tag {
-  font-size: .68rem;
+  font-size: .67rem;
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
-  opacity: .75;
-  margin-bottom: 2px;
+  opacity: .8;
+  margin-bottom: 3px;
 }
-.card-meta .title { font-size: .98rem; font-weight: 700; color: var(--white); }
-.card-meta .sub { font-size: .78rem; color: var(--muted); margin-top: 2px; }
+.card-meta .title { font-size: .97rem; font-weight: 700; color: var(--white); }
+.card-meta .sub { font-size: .77rem; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .card-toggle {
-  width: 28px; height: 28px;
+  width: 30px; height: 30px;
   border-radius: 50%;
-  background: rgba(255,255,255,.06);
+  background: rgba(255,255,255,.05);
   display: flex; align-items: center; justify-content: center;
-  font-size: .85rem;
-  color: var(--muted);
+  font-size: .8rem;
+  color: var(--text-dim);
   flex-shrink: 0;
   transition: transform .25s, background .2s;
 }
-.prompt-card.open .card-toggle { transform: rotate(180deg); background: rgba(116,185,224,.15); }
+.prompt-card.open .card-toggle {
+  transform: rotate(180deg);
+  background: rgba(77,217,236,.15);
+  color: var(--cyan);
+}
 
-/* ─── CARD BODY (collapsible) ────────────────────────── */
 .card-body {
   display: none;
-  padding: 0 20px 20px;
-  animation: slideDown .25s ease;
+  padding: 0 20px 22px;
+  animation: slideDown .22s ease;
 }
 .prompt-card.open .card-body { display: block; }
 @keyframes slideDown {
-  from { opacity:0; transform: translateY(-8px); }
-  to   { opacity:1; transform: none; }
+  from { opacity:0; transform:translateY(-6px); }
+  to   { opacity:1; transform:none; }
 }
 
-/* ─── HOW-TO STEPS ───────────────────────────────────── */
-.how-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 16px;
-}
+/* Steps */
+.how-steps { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
 .step {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  background: rgba(255,255,255,.04);
-  border-radius: 8px;
-  padding: 10px 14px;
+  gap: 12px;
+  background: rgba(0,0,0,.2);
+  border-radius: 9px;
+  padding: 11px 14px;
   font-size: .85rem;
-  color: var(--texto);
-  line-height: 1.4;
+  line-height: 1.45;
+  color: var(--text-main);
 }
 .step-num {
-  width: 22px; height: 22px;
+  width: 24px; height: 24px;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-size: .72rem;
@@ -218,587 +505,764 @@ body {
   margin-top: 1px;
 }
 
-/* ─── PROMPT BOX ─────────────────────────────────────── */
+/* Prompt box */
 .prompt-box {
-  background: #07111c;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 18px;
+  background: rgba(0,0,0,.5);
+  border: 1px solid rgba(77,217,236,.15);
+  border-radius: 12px;
+  padding: 20px;
   position: relative;
-  margin-top: 4px;
 }
 .prompt-box-label {
-  font-size: .68rem;
+  font-size: .67rem;
   font-weight: 700;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: var(--tiza);
-  margin-bottom: 12px;
+  color: var(--yellow);
+  margin-bottom: 14px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 .prompt-box-label::after {
   content: '';
   flex: 1;
   height: 1px;
-  background: rgba(240,192,64,.2);
+  background: linear-gradient(90deg, rgba(240,192,64,.25), transparent);
 }
 .prompt-text {
   font-family: 'Segoe UI', system-ui, sans-serif;
-  font-size: .86rem;
-  color: #a8c8e0;
+  font-size: .85rem;
+  color: #9ecfdf;
   white-space: pre-line;
-  line-height: 1.7;
+  line-height: 1.72;
 }
-.prompt-text .hl { color: var(--tiza); font-weight: 600; }
+.prompt-text .hl { color: var(--cyan-soft); font-weight: 700; }
 .prompt-text .ph {
-  background: rgba(116,185,224,.15);
-  border: 1px dashed rgba(116,185,224,.4);
-  border-radius: 4px;
-  padding: 1px 6px;
-  color: var(--celeste);
+  background: rgba(77,217,236,.08);
+  border: 1px dashed rgba(77,217,236,.3);
+  border-radius: 5px;
+  padding: 2px 8px;
+  color: var(--cyan);
   font-style: italic;
+  display: inline-block;
+  margin: 2px 0;
 }
 
-/* ─── COPY BUTTON ────────────────────────────────────── */
 .copy-btn {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 14px;
+  gap: 7px;
+  margin-top: 16px;
   margin-left: auto;
-  background: rgba(116,185,224,.12);
-  border: 1px solid rgba(116,185,224,.3);
-  color: var(--celeste);
+  background: rgba(77,217,236,.1);
+  border: 1px solid rgba(77,217,236,.25);
+  color: var(--cyan);
   font-size: .78rem;
   font-weight: 700;
-  padding: 7px 16px;
-  border-radius: 7px;
+  padding: 8px 18px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background .2s, color .2s;
+  transition: all .2s;
+  letter-spacing: .3px;
 }
-.copy-btn:hover { background: var(--celeste-d); color: #fff; }
-.copy-btn.ok { background: var(--verde); border-color: var(--verde); color: #fff; }
+.copy-btn:hover { background: var(--teal-bright); border-color: var(--cyan); color: var(--white); }
+.copy-btn.ok { background: rgba(46,204,113,.2); border-color: var(--green); color: var(--green); }
 
-/* ─── TIP PILL ───────────────────────────────────────── */
 .tip {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  background: rgba(240,192,64,.08);
+  background: rgba(240,192,64,.07);
   border: 1px solid rgba(240,192,64,.2);
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-size: .8rem;
+  border-radius: 9px;
+  padding: 12px 16px;
+  font-size: .81rem;
   color: #c8a830;
-  margin-top: 14px;
-  line-height: 1.45;
+  margin-top: 16px;
+  line-height: 1.5;
 }
-.tip-icon { flex-shrink: 0; }
 
-/* ─── RULES GRID ─────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════
+   RULES
+═══════════════════════════════════════════════════════ */
 .rules-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 10px;
-  margin-bottom: 16px;
 }
 .rule-item {
-  background: rgba(255,255,255,.04);
-  border-radius: 9px;
-  padding: 12px 14px;
+  background: var(--card-bg);
+  border-radius: 10px;
+  padding: 14px 16px;
   display: flex;
-  gap: 10px;
-  align-items: flex-start;
+  gap: 11px;
   font-size: .83rem;
-  color: var(--texto);
-  line-height: 1.4;
+  color: var(--text-main);
+  line-height: 1.45;
   border-left: 3px solid;
+  border-top: 1px solid var(--card-border);
+  border-right: 1px solid var(--card-border);
+  border-bottom: 1px solid var(--card-border);
 }
 .rule-item strong { display: block; font-size: .8rem; margin-bottom: 3px; }
 
-/* ─── DIVIDER ────────────────────────────────────────── */
-.divider {
-  height: 1px;
-  background: var(--border);
-  margin: 8px 0 16px;
+/* ═══════════════════════════════════════════════════════
+   STAT STRIP
+═══════════════════════════════════════════════════════ */
+.stat-strip {
+  background: linear-gradient(90deg, rgba(26,122,138,.6), rgba(14,74,92,.8));
+  border-top: 1px solid rgba(77,217,236,.15);
+  border-bottom: 1px solid rgba(77,217,236,.15);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  text-align: center;
+  backdrop-filter: blur(8px);
 }
+.stat-strip .num { font-size: 1.8rem; font-weight: 900; color: var(--cyan); }
+.stat-strip .label { font-size: .83rem; color: var(--text-main); line-height: 1.4; }
+.stat-strip .src { font-size: .7rem; color: var(--text-dim); }
 
-/* ─── FOOTER ─────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════════ */
 footer {
   text-align: center;
-  padding: 36px 20px 28px;
-  color: var(--muted);
+  padding: 40px 20px 32px;
+  color: var(--text-dim);
   font-size: .77rem;
-  border-top: 1px solid var(--border);
-  margin-top: 40px;
+  border-top: 1px solid rgba(77,217,236,.1);
+  margin-top: 48px;
+  background: rgba(0,0,0,.2);
 }
-footer a { color: var(--celeste); text-decoration: none; }
+footer strong { color: var(--cyan-soft); }
+footer a { color: var(--cyan); text-decoration: none; }
 
-/* ─── RESPONSIVE ─────────────────────────────────────── */
-@media (max-width: 480px) {
+@media (max-width: 500px) {
+  .intro-grid { grid-template-columns: 1fr; }
+  .prompt-elements-grid { grid-template-columns: 1fr 1fr; }
   .rules-grid { grid-template-columns: 1fr; }
-  .card-header { padding: 14px 16px; }
-  .card-body { padding: 0 14px 16px; }
+  .card-header { padding: 14px 14px; }
+  .card-body { padding: 0 14px 18px; }
+  .hero h1 { font-size: 1.8rem; }
 }
 </style>
 </head>
 <body>
 
-<!-- ══ HERO ════════════════════════════════════════════ -->
-<header class="hero">
-  <div class="hero-eyebrow">Taller de IA Académica · Argentina</div>
-  <h1>IA como <span>Asistente</span><br>de Aprendizaje</h1>
-  <p>Prompts listos para usar en ChatGPT, Gemini o Copilot. Copiá, pegá y aprendé matemática de verdad.</p>
-  <div class="hero-chips">
-    <span class="chip">📐 Números Reales</span>
-    <span class="chip">📚 Guía de Estudio</span>
-    <span class="chip">📝 Simulador de Examen</span>
+<!-- ══ HERO ══════════════════════════════════════════════ -->
+<section class="hero" id="inicio">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Taller de IA · Argentina · Matemática</div>
+    <h1>
+      <span class="accent">Inteligencia Artificial</span><br>
+      como Asistente de<br>
+      <span class="accent2">Aprendizaje</span>
+    </h1>
+    <p class="hero-sub">Prompts listos para usar en ChatGPT, Gemini o Copilot. Aprendé a supervisar la IA — no a dejarte supervisar por ella.</p>
+    <div class="hero-chips">
+      <span class="chip">🤖 Qué es la IA</span>
+      <span class="chip">⚠️ Alucinaciones</span>
+      <span class="chip">📐 Cómo hacer un Prompt</span>
+      <span class="chip">🎓 Tutor Socrático</span>
+      <span class="chip">📚 Guía de Estudio</span>
+      <span class="chip">📝 Simulador de Examen</span>
+    </div>
   </div>
-</header>
+  <div class="scroll-hint">Explorá</div>
+</section>
 
-<!-- ══ STAT ════════════════════════════════════════════ -->
+<!-- ══ STAT ═══════════════════════════════════════════════ -->
 <div class="stat-strip">
   <span class="num">2 de 3</span>
   <div>
-    <div class="label">jóvenes argentinos ya usan IA para sus tareas,<br>pero muchos no saben aprovecharla bien.</div>
+    <div class="label">jóvenes argentinos entre 9 y 17 años ya usan IA para sus tareas escolares.</div>
     <div class="src">📊 UNESCO / UNICEF · Argentinos por la Educación / MIT</div>
   </div>
 </div>
 
-<!-- ══ MAIN ════════════════════════════════════════════ -->
+<!-- ══ NAV ════════════════════════════════════════════════ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <button class="nav-btn" onclick="ir('que-es')">🤖 ¿Qué es la IA?</button>
+    <button class="nav-btn" onclick="ir('alucinaciones')">⚠️ Alucinaciones</button>
+    <button class="nav-btn" onclick="ir('prompts-intro')">📐 Cómo hacer Prompts</button>
+    <button class="nav-btn" onclick="ir('tutor')">🎓 Tutor por Tema</button>
+    <button class="nav-btn" onclick="ir('guia')">📚 Guía de Estudio</button>
+    <button class="nav-btn" onclick="ir('examen')">📝 Simulador Examen</button>
+  </div>
+</nav>
+
 <main class="container">
 
-  <!-- ── SECCIÓN 1: TUTOR POR TEMA ──────────────────── -->
-  <div class="section-header">
-    <div class="section-icon" style="background:rgba(116,185,224,.15)">🎓</div>
-    <div>
-      <h2>Prompt Tutor — Por Tema de Clase</h2>
-      <p>Usá este prompt al inicio de cada clase o cuando tenés dudas con un tema específico</p>
+  <!-- ══ SECCIÓN 1: QUÉ ES LA IA ═══════════════════════════ -->
+  <div class="section-wrap" id="que-es">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(77,217,236,.1);border-color:rgba(77,217,236,.25)">🤖</div>
+      <div>
+        <h2>¿Qué es la Inteligencia Artificial?</h2>
+        <p>Entender qué es — y qué no es — antes de usarla</p>
+      </div>
+    </div>
+
+    <div class="intro-grid">
+      <div class="intro-card">
+        <div class="ic-icon">🧠</div>
+        <h3>¿Qué es la IA?</h3>
+        <p>Es un conjunto de algoritmos capaces de realizar tareas complejas que antes solo podía hacer la mente humana: analizar texto, responder preguntas, generar imágenes o resolver problemas.</p>
+      </div>
+      <div class="intro-card">
+        <div class="ic-icon">✨</div>
+        <h3>IA Generativa</h3>
+        <p>Es la rama que <em>crea contenido nuevo</em>: textos, imágenes, código. Aprende de enormes volúmenes de datos y genera respuestas que parecen elaboradas por un humano. ChatGPT, Gemini y Copilot son ejemplos.</p>
+      </div>
+      <div class="intro-card">
+        <div class="ic-icon">⚡</div>
+        <h3>Una tecnología transformadora</h3>
+        <p>Como la electricidad o internet en su momento, la IA está cambiando cómo vivimos y trabajamos. Ya se usa en salud, finanzas, educación, manufactura y servicios públicos.</p>
+      </div>
+      <div class="intro-card">
+        <div class="ic-icon">🎓</div>
+        <h3>IA en la Educación</h3>
+        <p>Universidades, colegios y plataformas educativas de todo el mundo ya la integran. El desafío no es evitarla, sino aprender a usarla de forma inteligente y ética.</p>
+      </div>
+    </div>
+
+    <div style="background:rgba(77,217,236,.06);border:1px solid rgba(77,217,236,.18);border-radius:12px;padding:20px;margin-top:6px">
+      <p style="font-size:.88rem;color:var(--text-main);line-height:1.7">
+        <strong style="color:var(--cyan)">La IA no piensa como vos.</strong> No tiene experiencias, emociones ni criterio propio. Es un sistema estadístico muy sofisticado que predice qué texto es "probable" que siga a una pregunta. Por eso puede sonar muy convincente... y aun así estar equivocada.
+      </p>
     </div>
   </div>
 
-  <!-- Card: Configuración del Tutor -->
-  <div class="prompt-card open" id="card-tutor">
-    <div class="card-header" onclick="toggle('card-tutor')">
-      <div class="card-accent" style="background:rgba(116,185,224,.18)">🤖</div>
-      <div class="card-meta">
-        <div class="tag" style="color:var(--celeste)">Prompt Universal</div>
-        <div class="title">Tutor Socrático de Matemática</div>
-        <div class="sub">Funciona para cualquier tema: N, Z, Q, I, Valor Absoluto, Propiedades…</div>
+  <!-- ══ SECCIÓN 2: ALUCINACIONES ════════════════════════════ -->
+  <div class="section-wrap" id="alucinaciones">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(232,103,58,.1);border-color:rgba(232,103,58,.3)">⚠️</div>
+      <div>
+        <h2>Las "Alucinaciones" de la IA</h2>
+        <p>El mayor riesgo que hay que conocer antes de usar cualquier IA</p>
       </div>
-      <div class="card-toggle">▼</div>
     </div>
-    <div class="card-body">
 
-      <div class="how-steps">
-        <div class="step">
-          <div class="step-num" style="background:rgba(116,185,224,.2);color:var(--celeste)">1</div>
-          <span>Copiá el prompt completo de abajo y pegalo al <strong>inicio de una conversación nueva</strong> en ChatGPT, Gemini o Copilot.</span>
+    <div class="alucinacion-block">
+      <div class="alu-header">
+        <div class="alu-icon">🫧</div>
+        <div>
+          <h3>¿Qué es una alucinación?</h3>
+          <p>Cuando la IA "inventa" información con total confianza</p>
         </div>
-        <div class="step">
-          <div class="step-num" style="background:rgba(116,185,224,.2);color:var(--celeste)">2</div>
-          <span>Después del prompt, escribí tu consulta: <em>"Estoy viendo Números Racionales y no entiendo por qué b no puede ser cero."</em></span>
+      </div>
+      <p class="alu-body">
+        Las IAs generativas a veces producen respuestas que suenan completamente correctas, con detalles precisos y tono seguro... pero son <strong style="color:var(--orange-warm)">falsas o inventadas</strong>. Esto se llama "alucinación". No es que la IA "mienta" intencionalmente — simplemente no sabe lo que no sabe, y rellena los huecos con lo que estadísticamente parece probable.<br><br>
+        En matemática esto puede ocurrir con fórmulas incorrectas, pasos omitidos o errores de cálculo que parecen válidos.
+      </p>
+
+      <div class="alu-examples">
+        <div class="alu-ex">
+          <span class="ex-label">Ejemplo 1</span>
+          <span>La IA puede citar una "fuente académica" con autor, año y título perfectamente formateados... que nunca existió.</span>
         </div>
-        <div class="step">
-          <div class="step-num" style="background:rgba(116,185,224,.2);color:var(--celeste)">3</div>
-          <span>La IA te va a <strong>preguntar antes de explicar</strong>. Respondé honestamente — así el tutor ajusta el nivel para vos.</span>
+        <div class="alu-ex">
+          <span class="ex-label">Ejemplo 2</span>
+          <span>En un paso algebraico puede escribir "simplificando ambos lados..." y cometer un error que destruye toda la resolución, sin ninguna advertencia.</span>
+        </div>
+        <div class="alu-ex">
+          <span class="ex-label">Ejemplo 3</span>
+          <span>Puede afirmar que cierta propiedad matemática "siempre se cumple" cuando en realidad tiene restricciones importantes.</span>
         </div>
       </div>
 
-      <div class="prompt-box">
-        <div class="prompt-box-label">📋 Prompt — Copiá todo</div>
-        <div class="prompt-text" id="pt-tutor">Sos un tutor de matemáticas especializado en adolescentes de entre 12 y 18 años.
+      <div class="verify-strip">
+        <span class="v-icon">🔍</span>
+        <span>
+          <strong>Regla de oro: SIEMPRE verificá.</strong> Cualquier dato, fórmula, resultado o fuente que te dé la IA, confirmala con tu libro, con tu docente o con una fuente confiable antes de usarla. Vos sos el supervisor — la IA es tu asistente, no tu autoridad.
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SECCIÓN 3: CÓMO HACER PROMPTS ═══════════════════════ -->
+  <div class="section-wrap" id="prompts-intro">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(240,192,64,.1);border-color:rgba(240,192,64,.25)">📐</div>
+      <div>
+        <h2>¿Cómo hacer un buen Prompt?</h2>
+        <p>La calidad de la respuesta depende directamente de la calidad de tu instrucción</p>
+      </div>
+    </div>
+
+    <p style="font-size:.88rem;color:var(--text-muted);margin-bottom:20px;line-height:1.6">
+      Un <strong style="color:var(--white)">prompt</strong> es la instrucción que le das a la IA. Un prompt vago produce respuestas vagas. Un prompt bien estructurado transforma a la IA en un tutor personalizado. Estos son los 5 elementos clave:
+    </p>
+
+    <div class="prompt-elements-grid">
+      <div class="pe-card">
+        <div class="pe-num" style="color:var(--cyan)">01 · ROL</div>
+        <h4>Definí quién es la IA</h4>
+        <p>Dale un papel específico y experto para enfocar sus respuestas.</p>
+        <div class="pe-eg">"Actuá como tutor de matemática para secundaria…"</div>
+      </div>
+      <div class="pe-card">
+        <div class="pe-num" style="color:var(--green)">02 · CONTEXTO</div>
+        <h4>Contale tu situación</h4>
+        <p>¿Qué año cursás? ¿Qué tema estás viendo? ¿Cuál es tu duda?</p>
+        <div class="pe-eg">"Soy estudiante de 3° año y estoy estudiando fracciones…"</div>
+      </div>
+      <div class="pe-card">
+        <div class="pe-num" style="color:var(--yellow)">03 · TAREA</div>
+        <h4>Pedí algo concreto</h4>
+        <p>Sé específico sobre qué querés que haga la IA exactamente.</p>
+        <div class="pe-eg">"Quiero que por favor expliques paso a paso por qué…"</div>
+      </div>
+      <div class="pe-card">
+        <div class="pe-num" style="color:var(--orange-warm)">04 · FORMATO</div>
+        <h4>Indicá cómo querés la respuesta</h4>
+        <p>¿Paso a paso? ¿Con ejemplos? ¿Breve? ¿Con analogías cotidianas?</p>
+        <div class="pe-eg">"Usá ejemplos del día a día y dividilo en pasos cortos"</div>
+      </div>
+      <div class="pe-card" style="grid-column: span 1">
+        <div class="pe-num" style="color:var(--lila, #9B59B6)">05 · CIERRE</div>
+        <h4>Pedí continuidad</h4>
+        <p>Terminá pidiendo un ejercicio de práctica o una pregunta de verificación.</p>
+        <div class="pe-eg">"Dame un ejercicio similar para practicar yo solo"</div>
+      </div>
+    </div>
+
+    <div class="prompt-flow">
+      <span class="pf-tag" style="background:rgba(77,217,236,.15);color:var(--cyan)">ROL</span>
+      <span class="pf-arrow">+</span>
+      <span class="pf-tag" style="background:rgba(46,204,113,.12);color:var(--green)">CONTEXTO</span>
+      <span class="pf-arrow">+</span>
+      <span class="pf-tag" style="background:rgba(240,192,64,.12);color:var(--yellow)">TAREA</span>
+      <span class="pf-arrow">+</span>
+      <span class="pf-tag" style="background:rgba(232,103,58,.12);color:var(--orange-warm)">FORMATO</span>
+      <span class="pf-arrow">+</span>
+      <span class="pf-tag" style="background:rgba(155,89,182,.15);color:#b07fd4">CIERRE</span>
+      <span class="pf-arrow">=</span>
+      <span style="color:var(--white);font-weight:700">Respuesta de calidad ✓</span>
+    </div>
+
+    <div class="tip">
+      <span>⚠️</span>
+      <span>Un prompt largo y bien pensado no es "hacer trampa" — es aprender a comunicarse con precisión. Esa es una habilidad del siglo XXI tan importante como saber escribir bien.</span>
+    </div>
+  </div>
+
+  <!-- ══ SECCIÓN 4: TUTOR ═══════════════════════════════════ -->
+  <div class="section-wrap" id="tutor">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(77,217,236,.1);border-color:rgba(77,217,236,.25)">🎓</div>
+      <div>
+        <h2>Prompt Tutor — Por Tema de Clase</h2>
+        <p>Primero pegá la configuración del tutor. Luego usá el mensaje del tema específico.</p>
+      </div>
+    </div>
+
+    <!-- Tutor universal -->
+    <div class="prompt-card open" id="card-tutor">
+      <div class="card-header" onclick="toggle('card-tutor')">
+        <div class="card-accent" style="background:rgba(77,217,236,.12);border-color:rgba(77,217,236,.25)">🤖</div>
+        <div class="card-meta">
+          <div class="tag" style="color:var(--cyan)">Paso 1 — Universal</div>
+          <div class="title">Configuración del Tutor Socrático</div>
+          <div class="sub">Pegalo al inicio de una conversación nueva · funciona para todos los temas</div>
+        </div>
+        <div class="card-toggle">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="how-steps">
+          <div class="step">
+            <div class="step-num" style="background:rgba(77,217,236,.2);color:var(--cyan)">1</div>
+            <span>Copiá el prompt completo y pegalo al <strong>inicio de una conversación nueva</strong> en ChatGPT, Gemini o Copilot.</span>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:rgba(77,217,236,.2);color:var(--cyan)">2</div>
+            <span>Esperá que la IA confirme. Luego usá uno de los mensajes de tema específico que están abajo en la misma conversación.</span>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:rgba(77,217,236,.2);color:var(--cyan)">3</div>
+            <span><strong>Recordá verificar:</strong> si la IA te da un resultado directo, preguntale cómo llegó a esa respuesta antes de copiarlo.</span>
+          </div>
+        </div>
+        <div class="prompt-box">
+          <div class="prompt-box-label">📋 Prompt — Copiá todo</div>
+          <div class="prompt-text" id="pt-tutor">Sos un tutor de matemáticas especializado en adolescentes de entre 12 y 18 años.
 
 Tu objetivo principal NO es resolver la tarea por el estudiante, sino ayudarlo a comprender los conceptos y desarrollar su capacidad para resolver problemas por sí mismo.
 
 <span class="hl">Reglas que debés seguir siempre:</span>
 
 1. EVALUÁ EL NIVEL PRIMERO
-   - Antes de resolver cualquier ejercicio, preguntame qué entiendo del tema.
-   - Identificá si soy principiante, intermedio o avanzado.
-   - Adaptá el lenguaje y la dificultad a mi nivel real.
+   Antes de resolver cualquier ejercicio, preguntame qué entiendo del tema. Identificá si soy principiante, intermedio o avanzado. Adaptá el lenguaje y la dificultad a mi nivel real.
 
 2. APRENDIZAJE GUIADO
-   - No me des la respuesta completa de inmediato.
-   - Dividí el problema en pasos pequeños.
-   - Formulá preguntas que me ayuden a descubrir el siguiente paso.
-   - Esperá mi razonamiento antes de continuar.
+   No me des la respuesta completa de inmediato. Dividí el problema en pasos pequeños. Formulá preguntas que me ayuden a descubrir el siguiente paso. Esperá mi razonamiento antes de continuar.
 
 3. PENSAMIENTO CRÍTICO
-   - Preguntame por qué elegí un procedimiento.
-   - Pedime que explique con mis propias palabras.
-   - Ayudame a detectar mis propios errores antes de corregirlos.
+   Preguntame por qué elegí un procedimiento. Pedime que explique con mis propias palabras. Ayudame a detectar mis propios errores antes de corregirlos.
 
 4. EXPLICACIONES CLARAS
-   - Usá ejemplos cotidianos y analogías para adolescentes.
-   - Relacioná los conceptos nuevos con lo que ya sé.
-   - Mostrá ejemplos resueltos similares antes de pasar a ejercicios difíciles.
+   Usá ejemplos cotidianos y analogías para adolescentes. Relacioná los conceptos nuevos con lo que ya sé. Mostrá ejemplos resueltos similares antes de pasar a ejercicios difíciles.
 
 5. AJUSTÁ LA AYUDA SEGÚN MI NECESIDAD
-   - Si estoy muy perdido, dame más orientación.
-   - Si demuestro que entiendo, reducí las pistas gradualmente.
-   - Aplicá el principio de "mínima ayuda necesaria".
+   Si estoy muy perdido, dame más orientación. Si demuestro comprensión, reducí las pistas gradualmente. Aplicá el principio de "mínima ayuda necesaria".
 
 6. MANEJO DE TAREAS ESCOLARES
-   - NO resuelvas toda la tarea automáticamente.
-   - Dame pistas, estrategias y preguntas guía.
-   - Mostrá la solución completa solo si: a) yo la pido explícitamente, b) ya intenté resolverlo, c) la explicación incluye el razonamiento paso a paso.
+   NO resuelvas toda la tarea automáticamente. Dame pistas, estrategias y preguntas guía. Mostrá la solución completa solo si: a) yo la pido explícitamente, b) ya intenté resolverlo, c) la explicación incluye el razonamiento paso a paso.
 
 7. REFUERZO DEL APRENDIZAJE
-   - Después de cada ejercicio, resumí la idea principal aprendida.
-   - Proponé un ejercicio similar para que practique.
-   - Verificá mi comprensión con una pregunta breve.
+   Después de cada ejercicio, resumí la idea principal aprendida. Proponé un ejercicio similar para practicar. Verificá mi comprensión con una pregunta breve.
 
 8. MOTIVACIÓN
-   - Reconocé el esfuerzo y los avances.
-   - Corregí errores con respeto y sin descalificar.
-   - Promové una mentalidad de crecimiento.
+   Reconocé el esfuerzo y los avances. Corregí errores con respeto y sin descalificar. Promové una mentalidad de crecimiento.
 
 Confirmá que entendiste estas reglas escribiendo: "Tutor activado ✓. Contame, ¿qué tema de matemática estás estudiando hoy y qué es lo que ya sabés sobre él?"</div>
-        <button class="copy-btn" onclick="copiar('pt-tutor', this)">📋 Copiar prompt</button>
-      </div>
-
-      <div class="tip">
-        <span class="tip-icon">💡</span>
-        <span>Si la IA empieza a darte respuestas directas sin preguntarte nada, recordale: <em>"Acordate de las reglas del tutor: guiame con preguntas, no me des la respuesta."</em></span>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Cards por tema -->
-  <div class="prompt-card" id="card-n">
-    <div class="card-header" onclick="toggle('card-n')">
-      <div class="card-accent" style="background:rgba(46,204,113,.15)">🌱</div>
-      <div class="card-meta">
-        <div class="tag" style="color:var(--verde)">Tema específico</div>
-        <div class="title">Números Naturales (ℕ)</div>
-        <div class="sub">Secuencia, operaciones básicas, propiedades del sucesor</div>
-      </div>
-      <div class="card-toggle">▼</div>
-    </div>
-    <div class="card-body">
-      <div class="how-steps">
-        <div class="step">
-          <div class="step-num" style="background:rgba(46,204,113,.2);color:var(--verde)">→</div>
-          <span>Primero pegá el <strong>Prompt Tutor</strong> de arriba. Luego continuá con este mensaje en la misma conversación.</span>
+          <button class="copy-btn" onclick="copiar('pt-tutor', this)">📋 Copiar prompt</button>
+        </div>
+        <div class="tip">
+          <span>💡</span>
+          <span>Si la IA empieza a darte respuestas directas sin preguntarte nada, recordale: <em>"Acordate de las reglas del tutor: guiame con preguntas, no me des la respuesta todavía."</em></span>
         </div>
       </div>
-      <div class="prompt-box">
-        <div class="prompt-box-label">📋 Mensaje para enviar después del prompt tutor</div>
-        <div class="prompt-text" id="pt-n">Estoy estudiando <span class="hl">Números Naturales (ℕ)</span> en la materia de matemática de secundaria.
-
-Los naturales son {1, 2, 3, 4, 5…} y se generan sumando 1 al número anterior.
-
-<span class="ph">[Contame lo que entendés o pegá el ejercicio/pregunta que tenés]</span>
-
-Empecemos: evaluame el nivel con una pregunta antes de explicar nada.</div>
-        <button class="copy-btn" onclick="copiar('pt-n', this)">📋 Copiar</button>
-      </div>
     </div>
-  </div>
 
-  <div class="prompt-card" id="card-z">
-    <div class="card-header" onclick="toggle('card-z')">
-      <div class="card-accent" style="background:rgba(155,89,182,.15)">❄️</div>
-      <div class="card-meta">
-        <div class="tag" style="color:var(--lila)">Tema específico</div>
-        <div class="title">Números Enteros (ℤ)</div>
-        <div class="sub">Negativos, cero, recta numérica, operaciones con signos</div>
+    <!-- ℕ -->
+    <div class="prompt-card" id="card-n">
+      <div class="card-header" onclick="toggle('card-n')">
+        <div class="card-accent" style="background:rgba(46,204,113,.12);border-color:rgba(46,204,113,.25)">🌱</div>
+        <div class="card-meta">
+          <div class="tag" style="color:var(--green)">Paso 2 · Tema</div>
+          <div class="title">Números Naturales (ℕ)</div>
+          <div class="sub">Secuencia, operaciones básicas, propiedades del sucesor</div>
+        </div>
+        <div class="card-toggle">▼</div>
       </div>
-      <div class="card-toggle">▼</div>
-    </div>
-    <div class="card-body">
-      <div class="how-steps">
-        <div class="step">
-          <div class="step-num" style="background:rgba(155,89,182,.2);color:var(--lila)">→</div>
-          <span>Primero pegá el <strong>Prompt Tutor</strong>. Luego enviá este mensaje.</span>
+      <div class="card-body">
+        <div class="prompt-box">
+          <div class="prompt-box-label">📋 Enviá esto después del Prompt Tutor</div>
+          <div class="prompt-text" id="pt-n">Estoy estudiando <span class="hl">Números Naturales (ℕ)</span> en matemática de secundaria.
+
+Los naturales son {1, 2, 3, 4, 5…} y se generan sumando 1 al número anterior (el sucesor).
+
+Mi consulta de hoy es:
+<span class="ph">[Describí tu duda o pegá el ejercicio que tenés]</span>
+
+Evaluame el nivel con una pregunta antes de explicar nada.</div>
+          <button class="copy-btn" onclick="copiar('pt-n', this)">📋 Copiar</button>
         </div>
       </div>
-      <div class="prompt-box">
-        <div class="prompt-box-label">📋 Mensaje para enviar después del prompt tutor</div>
-        <div class="prompt-text" id="pt-z">Estoy estudiando <span class="hl">Números Enteros (ℤ)</span> en matemática de secundaria.
+    </div>
 
-ℤ incluye los negativos, el cero y los positivos: {…, -3, -2, -1, 0, 1, 2, 3, …}
+    <!-- ℤ -->
+    <div class="prompt-card" id="card-z">
+      <div class="card-header" onclick="toggle('card-z')">
+        <div class="card-accent" style="background:rgba(155,89,182,.12);border-color:rgba(155,89,182,.25)">❄️</div>
+        <div class="card-meta">
+          <div class="tag" style="color:#b07fd4">Paso 2 · Tema</div>
+          <div class="title">Números Enteros (ℤ)</div>
+          <div class="sub">Negativos, cero, recta numérica, operaciones con signos</div>
+        </div>
+        <div class="card-toggle">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="prompt-box">
+          <div class="prompt-box-label">📋 Enviá esto después del Prompt Tutor</div>
+          <div class="prompt-text" id="pt-z">Estoy estudiando <span class="hl">Números Enteros (ℤ)</span> en matemática de secundaria.
 
-Tengo dudas con:
-<span class="ph">[Escribí lo que no entendés: operaciones con signos, posición en la recta numérica, valor absoluto de enteros, etc.]</span>
+ℤ incluye negativos, cero y positivos: {…, -3, -2, -1, 0, 1, 2, 3, …}
 
-Evaluame el nivel primero con una pregunta, antes de explicar.</div>
-        <button class="copy-btn" onclick="copiar('pt-z', this)">📋 Copiar</button>
+Mi consulta de hoy es:
+<span class="ph">[Operaciones con signos / posición en la recta / lo que no entendés]</span>
+
+Evaluame el nivel primero antes de explicar.</div>
+          <button class="copy-btn" onclick="copiar('pt-z', this)">📋 Copiar</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="prompt-card" id="card-q">
-    <div class="card-header" onclick="toggle('card-q')">
-      <div class="card-accent" style="background:rgba(240,192,64,.12)">🍕</div>
-      <div class="card-meta">
-        <div class="tag" style="color:var(--tiza)">Tema específico</div>
-        <div class="title">Números Racionales (ℚ)</div>
-        <div class="sub">Fracciones, expresiones decimales exactas y periódicas</div>
+    <!-- ℚ -->
+    <div class="prompt-card" id="card-q">
+      <div class="card-header" onclick="toggle('card-q')">
+        <div class="card-accent" style="background:rgba(240,192,64,.1);border-color:rgba(240,192,64,.2)">🍕</div>
+        <div class="card-meta">
+          <div class="tag" style="color:var(--yellow)">Paso 2 · Tema</div>
+          <div class="title">Números Racionales (ℚ)</div>
+          <div class="sub">Fracciones, decimales exactos y periódicos</div>
+        </div>
+        <div class="card-toggle">▼</div>
       </div>
-      <div class="card-toggle">▼</div>
-    </div>
-    <div class="card-body">
-      <div class="prompt-box">
-        <div class="prompt-box-label">📋 Mensaje para enviar después del prompt tutor</div>
-        <div class="prompt-text" id="pt-q">Estoy estudiando <span class="hl">Números Racionales (ℚ)</span>.
+      <div class="card-body">
+        <div class="prompt-box">
+          <div class="prompt-box-label">📋 Enviá esto después del Prompt Tutor</div>
+          <div class="prompt-text" id="pt-q">Estoy estudiando <span class="hl">Números Racionales (ℚ)</span>.
 
-Son los números de la forma a/b, donde b ≠ 0. Incluyen fracciones, decimales exactos (1/2 = 0,5) y decimales periódicos (1/3 = 0,333…).
+Son los de la forma a/b con b ≠ 0. Incluyen fracciones, decimales exactos (1/2 = 0,5) y periódicos (1/3 = 0,333…).
 
 Mi duda específica es:
-<span class="ph">[Describí tu duda: por qué b ≠ 0, cómo pasar de decimal periódico a fracción, simplificación, etc.]</span>
+<span class="ph">[Por qué b ≠ 0 / cómo pasar decimal periódico a fracción / lo que no entendés]</span>
 
-Antes de explicar, preguntame qué ya sé sobre fracciones para saber por dónde empezar.</div>
-        <button class="copy-btn" onclick="copiar('pt-q', this)">📋 Copiar</button>
+Antes de explicar, preguntame qué sé sobre fracciones.</div>
+          <button class="copy-btn" onclick="copiar('pt-q', this)">📋 Copiar</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="prompt-card" id="card-i">
-    <div class="card-header" onclick="toggle('card-i')">
-      <div class="card-accent" style="background:rgba(231,76,60,.15)">📐</div>
-      <div class="card-meta">
-        <div class="tag" style="color:var(--rojo)">Tema específico</div>
-        <div class="title">Números Irracionales (𝕀) y Valor Absoluto</div>
-        <div class="sub">√2, π, recta numérica geométrica, módulo</div>
+    <!-- 𝕀 -->
+    <div class="prompt-card" id="card-i">
+      <div class="card-header" onclick="toggle('card-i')">
+        <div class="card-accent" style="background:rgba(231,76,60,.12);border-color:rgba(231,76,60,.25)">📐</div>
+        <div class="card-meta">
+          <div class="tag" style="color:var(--red)">Paso 2 · Tema</div>
+          <div class="title">Irracionales (𝕀) y Valor Absoluto</div>
+          <div class="sub">√2, π, recta geométrica, módulo</div>
+        </div>
+        <div class="card-toggle">▼</div>
       </div>
-      <div class="card-toggle">▼</div>
-    </div>
-    <div class="card-body">
-      <div class="prompt-box">
-        <div class="prompt-box-label">📋 Mensaje para enviar después del prompt tutor</div>
-        <div class="prompt-text" id="pt-i">Estoy estudiando <span class="hl">Números Irracionales (𝕀) y Valor Absoluto</span>.
+      <div class="card-body">
+        <div class="prompt-box">
+          <div class="prompt-box-label">📋 Enviá esto después del Prompt Tutor</div>
+          <div class="prompt-text" id="pt-i">Estoy estudiando <span class="hl">Números Irracionales (𝕀) y Valor Absoluto</span>.
 
-Los irracionales son decimales infinitos no periódicos (√2 = 1,4142…, π = 3,1415…). Se ubican en la recta usando el Teorema de Pitágoras.
-
-El valor absoluto |a| es la distancia de un número al cero en la recta real.
+Los irracionales son decimales infinitos no periódicos (√2, π). Se ubican en la recta con el Teorema de Pitágoras. El valor absoluto |a| es la distancia al cero.
 
 Mi duda es:
-<span class="ph">[Escribí qué parte no entendés: construcción geométrica de √2, por qué π es irracional, cómo resolver ecuaciones con módulo, etc.]</span>
+<span class="ph">[Construcción geométrica de √2 / por qué π es irracional / ecuaciones con módulo / lo que no entendés]</span>
 
-Evaluame antes de empezar: haceme una pregunta para ver qué sé.</div>
-        <button class="copy-btn" onclick="copiar('pt-i', this)">📋 Copiar</button>
+Evaluame antes de empezar.</div>
+          <button class="copy-btn" onclick="copiar('pt-i', this)">📋 Copiar</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- ── SECCIÓN 2: GUÍA DE ESTUDIO ─────────────────── -->
-  <div class="section-header">
-    <div class="section-icon" style="background:rgba(46,204,113,.15)">📚</div>
-    <div>
-      <h2>Prompt de Guía de Estudio</h2>
-      <p>Para cuando tenés apuntes, fotos de la carpeta o un capítulo del libro y querés organizarlo todo</p>
-    </div>
-  </div>
-
-  <div class="prompt-card" id="card-guia">
-    <div class="card-header" onclick="toggle('card-guia')">
-      <div class="card-accent" style="background:rgba(46,204,113,.18)">📖</div>
-      <div class="card-meta">
-        <div class="tag" style="color:var(--verde)">Prompt 2</div>
-        <div class="title">Guía de Estudio y Entrenamiento Personalizado</div>
-        <div class="sub">Pegá tus apuntes o subí fotos de la carpeta — la IA te arma un resumen estructurado con ejercicios</div>
+  <!-- ══ SECCIÓN 5: GUÍA DE ESTUDIO ════════════════════════ -->
+  <div class="section-wrap" id="guia">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(46,204,113,.1);border-color:rgba(46,204,113,.25)">📚</div>
+      <div>
+        <h2>Prompt de Guía de Estudio</h2>
+        <p>Tenés apuntes o fotos de la carpeta — la IA te arma un plan de estudio con ejercicios nuevos</p>
       </div>
-      <div class="card-toggle">▼</div>
     </div>
-    <div class="card-body">
 
-      <div class="how-steps">
-        <div class="step">
-          <div class="step-num" style="background:rgba(46,204,113,.2);color:var(--verde)">1</div>
-          <span>Copiá el prompt y pegalo en una conversación nueva (no hace falta el prompt tutor para este).</span>
+    <div class="prompt-card" id="card-guia">
+      <div class="card-header" onclick="toggle('card-guia')">
+        <div class="card-accent" style="background:rgba(46,204,113,.15);border-color:rgba(46,204,113,.3)">📖</div>
+        <div class="card-meta">
+          <div class="tag" style="color:var(--green)">Prompt 2</div>
+          <div class="title">Guía de Estudio y Entrenamiento Personalizado</div>
+          <div class="sub">Pegá tus apuntes o subí fotos · la IA arma 4 secciones estructuradas</div>
         </div>
-        <div class="step">
-          <div class="step-num" style="background:rgba(46,204,113,.2);color:var(--verde)">2</div>
-          <span>Reemplazá el marcador <code style="color:var(--celeste)">[MATERIAL]</code> con el texto de tus apuntes. O si usás ChatGPT / Gemini, podés adjuntar fotos de la carpeta directamente.</span>
-        </div>
-        <div class="step">
-          <div class="step-num" style="background:rgba(46,204,113,.2);color:var(--verde)">3</div>
-          <span>La IA te va a devolver 4 secciones: desglose de clase → ejercicios nuevos → regla clave → pregunta socrática de cierre.</span>
-        </div>
+        <div class="card-toggle">▼</div>
       </div>
+      <div class="card-body">
+        <div class="how-steps">
+          <div class="step">
+            <div class="step-num" style="background:rgba(46,204,113,.2);color:var(--green)">1</div>
+            <span>Este prompt va en una <strong>conversación nueva</strong> (no necesita el prompt tutor).</span>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:rgba(46,204,113,.2);color:var(--green)">2</div>
+            <span>Reemplazá el bloque <code style="color:var(--cyan)">[MATERIAL]</code> con tus apuntes, o adjuntá las fotos de tu carpeta directamente.</span>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:rgba(46,204,113,.2);color:var(--green)">3</div>
+            <span>Cuando la IA te dé los 3 ejercicios nuevos, <strong>resolvelos en papel</strong>. Luego mandá tus intentos para que te corrija.</span>
+          </div>
+        </div>
+        <div class="prompt-box">
+          <div class="prompt-box-label">📋 Prompt — Copiá todo</div>
+          <div class="prompt-text" id="pt-guia">Actuá como un especialista en didáctica de la matemática y diseño de guías de estudio para secundaria.
 
-      <div class="prompt-box">
-        <div class="prompt-box-label">📋 Prompt — Copiá todo</div>
-        <div class="prompt-text" id="pt-guia">Actuá como un especialista en didáctica de la matemática y diseño de guías de estudio para secundaria.
+Te comparto el contenido de mis últimas clases:
 
-Te voy a compartir el contenido de mis últimas clases de matemática:
+<span class="ph">─────────────────────────────────
+[PEGÁ AQUÍ TUS APUNTES O EL TEXTO]
+[O adjuntá las fotos de tu carpeta]
+─────────────────────────────────</span>
 
-<span class="ph">─────────────────────────────────────
-[PEGÁ AQUÍ TUS APUNTES O EL TEXTO DEL LIBRO]
-[O subí las fotos de tu carpeta si la IA lo permite]
-─────────────────────────────────────</span>
-
-Tu tarea es transformar ese material en una <span class="hl">"Guía de Estudio y Entrenamiento Personalizada"</span> con exactamente estas 4 secciones:
+Transformá ese material en una <span class="hl">"Guía de Estudio y Entrenamiento Personalizada"</span> con exactamente estas 4 secciones:
 
 <span class="hl">1. DESGLOSE DE CLASE</span>
 Tomá un ejercicio ya resuelto en el material y explicame el paso a paso detallado de por qué se hizo cada operación. No asumas nada — justificá cada renglón.
 
 <span class="hl">2. EJERCICIOS NUEVOS PARA PRACTICAR</span>
-Diseñá 3 ejercicios completamente nuevos, con el mismo nivel de dificultad y estructura que los de la clase. No me des las soluciones todavía — quiero resolverlos yo primero en papel.
+Diseñá 3 ejercicios nuevos, con el mismo nivel de dificultad. No me des las soluciones todavía — quiero resolverlos yo en papel primero.
 
 <span class="hl">3. EXPLICACIÓN DE REFUERZO</span>
-Escribí un párrafo corto (máximo 5 líneas) con: la regla o concepto más importante de esta clase + el error más común que cometen los estudiantes en este tema y cómo evitarlo.
+Un párrafo corto (máximo 5 líneas) con: la regla más importante de esta clase + el error más común que cometen los estudiantes y cómo evitarlo.
 
 <span class="hl">4. CIERRE SOCRÁTICO</span>
-Preguntame cuál de los 3 ejercicios nuevos quiero resolver primero junto a vos, para que puedas corregirme el proceso paso a paso cuando te mande mis intentos.</div>
-        <button class="copy-btn" onclick="copiar('pt-guia', this)">📋 Copiar prompt</button>
-      </div>
+Preguntame cuál de los 3 ejercicios quiero resolver primero con vos, para que me corrijas el proceso cuando te mande mis intentos.
 
-      <div class="tip">
-        <span class="tip-icon">💡</span>
-        <span>Una vez que la IA te dé los 3 ejercicios, <strong>resolvelos en papel con lapicera</strong>. Después mandá una foto o transcribí tus pasos para que te corrija. Ese es el momento de aprendizaje real.</span>
+⚠️ Importante: si encontrás errores en mis apuntes, marcalos claramente antes de empezar con la guía.</div>
+          <button class="copy-btn" onclick="copiar('pt-guia', this)">📋 Copiar prompt</button>
+        </div>
+        <div class="tip">
+          <span>🔍</span>
+          <span>El punto ⚠️ al final es clave: le pedís a la IA que detecte errores en tus propios apuntes. Así usás la verificación a tu favor desde el principio.</span>
+        </div>
       </div>
-
     </div>
   </div>
 
-  <!-- ── SECCIÓN 3: SIMULADOR DE EXAMEN ─────────────── -->
-  <div class="section-header">
-    <div class="section-icon" style="background:rgba(231,76,60,.15)">📝</div>
-    <div>
-      <h2>Prompt Simulador de Examen</h2>
-      <p>Para practicar antes de una evaluación — la IA te toma el examen y te corrige como un docente</p>
-    </div>
-  </div>
-
-  <div class="prompt-card" id="card-examen">
-    <div class="card-header" onclick="toggle('card-examen')">
-      <div class="card-accent" style="background:rgba(231,76,60,.18)">⚖️</div>
-      <div class="card-meta">
-        <div class="tag" style="color:var(--rojo)">Prompt 3</div>
-        <div class="title">Simulador de Examen con Corrección Socrática</div>
-        <div class="sub">La IA te pone el examen, vos lo resolvés en papel, ella te corrige renglón por renglón</div>
+  <!-- ══ SECCIÓN 6: SIMULADOR DE EXAMEN ════════════════════ -->
+  <div class="section-wrap" id="examen">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(231,76,60,.1);border-color:rgba(231,76,60,.25)">📝</div>
+      <div>
+        <h2>Prompt Simulador de Examen</h2>
+        <p>La IA te toma el examen — sin darte las respuestas — y luego te corrige como un docente</p>
       </div>
-      <div class="card-toggle">▼</div>
     </div>
-    <div class="card-body">
 
-      <div class="how-steps">
-        <div class="step">
-          <div class="step-num" style="background:rgba(231,76,60,.2);color:var(--rojo)">1</div>
-          <span>Copiá el prompt y reemplazá <code style="color:var(--celeste)">[TEMAS]</code> con los temas que entran en tu próxima evaluación (podés copiarlos del programa o de la carpeta).</span>
+    <div class="prompt-card" id="card-examen">
+      <div class="card-header" onclick="toggle('card-examen')">
+        <div class="card-accent" style="background:rgba(231,76,60,.15);border-color:rgba(231,76,60,.3)">⚖️</div>
+        <div class="card-meta">
+          <div class="tag" style="color:var(--red)">Prompt 3</div>
+          <div class="title">Simulador de Examen con Corrección Socrática</div>
+          <div class="sub">Resolvés en papel · mandás tus intentos · la IA te corrige renglón por renglón</div>
         </div>
-        <div class="step">
-          <div class="step-num" style="background:rgba(231,76,60,.2);color:var(--rojo)">2</div>
-          <span>La IA te va a dar el examen simulado <strong>sin soluciones</strong>. Hacelo en papel, como si fuera real.</span>
-        </div>
-        <div class="step">
-          <div class="step-num" style="background:rgba(231,76,60,.2);color:var(--rojo)">3</div>
-          <span>Mandá tus respuestas (foto o texto) y la IA te corrige paso a paso con criterio pedagógico. Si te equivocaste, te guía para que descubras el error vos solo.</span>
-        </div>
+        <div class="card-toggle">▼</div>
       </div>
+      <div class="card-body">
+        <div class="how-steps">
+          <div class="step">
+            <div class="step-num" style="background:rgba(231,76,60,.2);color:var(--red)">1</div>
+            <span>Reemplazá <code style="color:var(--cyan)">[TEMAS]</code> con los temas de tu próxima evaluación (copiá del programa o de la carpeta).</span>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:rgba(231,76,60,.2);color:var(--red)">2</div>
+            <span>La IA te dará el examen <strong>sin soluciones</strong>. Hacelo en papel, en silencio, como si fuera real.</span>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:rgba(231,76,60,.2);color:var(--red)">3</div>
+            <span>Mandá tus respuestas (foto o texto) y la IA te corrige paso a paso. Si cometiste errores, te guía para que los descubras vos solo.</span>
+          </div>
+        </div>
+        <div class="prompt-box">
+          <div class="prompt-box-label">📋 Prompt — Copiá todo</div>
+          <div class="prompt-text" id="pt-examen">Actuá como un profesor de matemática exigente pero con excelente pedagogía, especializado en secundaria.
 
-      <div class="prompt-box">
-        <div class="prompt-box-label">📋 Prompt — Copiá todo</div>
-        <div class="prompt-text" id="pt-examen">Actuá como un profesor de matemática exigente pero con excelente pedagogía, especializado en secundaria.
+Los temas de mi próxima evaluación son:
 
-Los temas que entran en mi próxima evaluación son:
-
-<span class="ph">─────────────────────────────────────
-[PEGÁ AQUÍ LOS TEMAS EXACTOS]
+<span class="ph">─────────────────────────────────
+[PEGÁ AQUÍ LOS TEMAS]
 Ejemplo: Números naturales y enteros, operaciones con racionales, pasaje de decimal periódico a fracción, irracionales y valor absoluto.
-─────────────────────────────────────</span>
+─────────────────────────────────</span>
 
-<span class="hl">FASE 1 — EL EXAMEN (primera respuesta tuya):</span>
+<span class="hl">FASE 1 — EL EXAMEN (tu primera respuesta):</span>
 Diseñá un examen simulado con exactamente 3 ejercicios variados, basados estrictamente en esos temas.
 
-Restricción fundamental: presentame el examen completo en tu primera respuesta, <span class="hl">SIN incluir resultados ni soluciones en ninguna parte</span>.
+Restricción fundamental: presentame el examen completo en tu primera respuesta, <span class="hl">SIN incluir resultados ni soluciones</span>.
 
-Terminá tu primera respuesta diciendo solo esto:
-"Aquí está tu examen simulado. Resolvelo en una hoja por tu cuenta y, cuando termines, escribime tus respuestas o enviame la foto para que te corrija."
+Terminá diciendo solo: "Aquí está tu examen simulado. Resolvelo en papel y, cuando termines, escribime tus respuestas o enviame la foto para que te corrija."
 
 <span class="hl">FASE 2 — LA CORRECCIÓN (cuando yo te mande mis intentos):</span>
-Actuá como tutor evaluador:
 - Analizá mi procedimiento renglón por renglón.
-- Si detecto errores, no me los digas directamente: guiame con preguntas socráticas para que yo los descubra solo.
-- Si lo hice bien, confirmalo y explicame por qué está correcto.
-- Al final, calificame justificando los criterios pedagógicos usados.
-- Proponé un ejercicio de refuerzo para el concepto donde cometí más errores.</div>
-        <button class="copy-btn" onclick="copiar('pt-examen', this)">📋 Copiar prompt</button>
-      </div>
+- Si hay errores, no me los digas directamente: guiame con preguntas socráticas para que los descubra yo solo.
+- Si está bien, confirmalo y explicá por qué.
+- Al final, calificame con criterio pedagógico justificado.
+- Proponé un ejercicio de refuerzo para el concepto donde cometí más errores.
 
-      <div class="tip">
-        <span class="tip-icon">⚠️</span>
-        <span>Si la IA te da las respuestas junto con el examen sin que las pidas, recordale: <em>"No me des las soluciones todavía. Esperá mis intentos."</em> Vos sos el supervisor de cómo trabaja la IA.</span>
+⚠️ Si verificás que alguno de tus propios ejercicios tiene un error de enunciado, corrígelo antes de presentarlo.</div>
+          <button class="copy-btn" onclick="copiar('pt-examen', this)">📋 Copiar prompt</button>
+        </div>
+        <div class="tip">
+          <span>⚠️</span>
+          <span>Si la IA te da las soluciones junto con el examen sin que las pidas, recordale: <em>"No me des las respuestas todavía. Esperá mis intentos."</em> Vos sos el supervisor — la IA es tu asistente.</span>
+        </div>
       </div>
-
     </div>
   </div>
 
-  <!-- ── REGLA DE ORO ───────────────────────────────── -->
-  <div class="section-header" style="padding-top:40px">
-    <div class="section-icon" style="background:rgba(240,192,64,.12)">⭐</div>
-    <div>
-      <h2>Las Reglas del Buen Supervisor</h2>
-      <p>La IA es una herramienta. Vos sos quien manda.</p>
+  <!-- ══ REGLAS DE ORO ══════════════════════════════════════ -->
+  <div class="section-wrap" id="reglas">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(240,192,64,.1);border-color:rgba(240,192,64,.2)">⭐</div>
+      <div>
+        <h2>Las Reglas del Buen Supervisor</h2>
+        <p>La IA es una herramienta poderosa. Vos sos quien decide cómo usarla.</p>
+      </div>
     </div>
-  </div>
-
-  <div class="rules-grid">
-    <div class="rule-item" style="border-color:var(--verde)">
-      <span>✓</span>
-      <div><strong style="color:var(--verde)">Verificá siempre</strong>Los resultados que genera la IA pueden tener errores. Siempre revisá con tu razonamiento.</div>
-    </div>
-    <div class="rule-item" style="border-color:var(--celeste)">
-      <span>✓</span>
-      <div><strong style="color:var(--celeste)">Hacé el trabajo vos</strong>Usar la IA para que piense por vos es como pedir que alguien haga gimnasia en tu lugar.</div>
-    </div>
-    <div class="rule-item" style="border-color:var(--tiza)">
-      <span>✓</span>
-      <div><strong style="color:var(--tiza)">Lapicera en mano</strong>Las matemáticas se aprenden resolviendo en papel. La IA guía, tu lápiz trabaja.</div>
-    </div>
-    <div class="rule-item" style="border-color:var(--lila)">
-      <span>✓</span>
-      <div><strong style="color:var(--lila)">Citá las fuentes</strong>Si la IA te da una explicación, preguntale de qué fuente viene antes de usarla.</div>
+    <div class="rules-grid">
+      <div class="rule-item" style="border-color:var(--cyan)">
+        <span>🔍</span>
+        <div><strong style="color:var(--cyan)">Verificá siempre</strong>Cualquier dato, fórmula o fuente que te dé la IA, confirmala antes de usarla. Las alucinaciones son reales.</div>
+      </div>
+      <div class="rule-item" style="border-color:var(--green)">
+        <span>✍️</span>
+        <div><strong style="color:var(--green)">Lapicera en mano</strong>Las matemáticas se aprenden resolviendo en papel. La IA guía, tu lápiz trabaja.</div>
+      </div>
+      <div class="rule-item" style="border-color:var(--yellow)">
+        <span>🧠</span>
+        <div><strong style="color:var(--yellow)">Pensá antes de copiar</strong>Si copiás sin entender, la IA aprendió por vos. En el examen real, estás solo.</div>
+      </div>
+      <div class="rule-item" style="border-color:var(--orange-warm)">
+        <span>🔗</span>
+        <div><strong style="color:var(--orange-warm)">Pedí la fuente</strong>Ante cualquier afirmación importante, preguntale: "¿De qué fuente viene esto?" y verificala vos.</div>
+      </div>
     </div>
   </div>
 
 </main>
 
-<!-- ══ FOOTER ══════════════════════════════════════════ -->
+<!-- ══ FOOTER ══════════════════════════════════════════════ -->
 <footer>
   <p>Desarrollado por <strong>Suyin Perdomo</strong> · Taller IA Académica · Argentina</p>
-  <p style="margin-top:5px">Fuentes: <a href="https://www.unicef.org" target="_blank">UNICEF</a> · <a href="https://www.unesco.org" target="_blank">UNESCO</a> · Argentinos por la Educación / MIT · <a href="https://www.elsevier.com" target="_blank">Elsevier</a></p>
+  <p style="margin-top:6px">Fuentes: <a href="https://www.unicef.org" target="_blank">UNICEF</a> · <a href="https://www.unesco.org" target="_blank">UNESCO</a> · Argentinos por la Educación / MIT · <a href="https://www.elsevier.com" target="_blank">Elsevier</a></p>
 </footer>
 
 <script>
 function toggle(id) {
-  const card = document.getElementById(id);
-  card.classList.toggle('open');
+  document.getElementById(id).classList.toggle('open');
+}
+
+function ir(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function copiar(id, btn) {
-  // Grab text without HTML tags
   const el = document.getElementById(id);
   const text = el.innerText;
+  const original = btn.innerHTML;
   navigator.clipboard.writeText(text).then(() => {
-    btn.textContent = '✓ ¡Copiado!';
+    btn.innerHTML = '✓ ¡Copiado!';
     btn.classList.add('ok');
-    setTimeout(() => {
-      btn.textContent = '📋 Copiar';
-      btn.classList.remove('ok');
-    }, 2200);
+    setTimeout(() => { btn.innerHTML = original; btn.classList.remove('ok'); }, 2200);
   }).catch(() => {
-    // Fallback
-    const range = document.createRange();
-    range.selectNode(el);
+    const r = document.createRange();
+    r.selectNode(el);
     window.getSelection().removeAllRanges();
-    window.getSelection().addRange(range);
+    window.getSelection().addRange(r);
     document.execCommand('copy');
     window.getSelection().removeAllRanges();
-    btn.textContent = '✓ ¡Copiado!';
+    btn.innerHTML = '✓ ¡Copiado!';
     btn.classList.add('ok');
-    setTimeout(() => {
-      btn.textContent = '📋 Copiar';
-      btn.classList.remove('ok');
-    }, 2200);
+    setTimeout(() => { btn.innerHTML = original; btn.classList.remove('ok'); }, 2200);
   });
 }
+
+// Nav activo en scroll
+const sections = ['que-es','alucinaciones','prompts-intro','tutor','guia','examen'];
+const navBtns = document.querySelectorAll('.nav-btn');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 100) current = id;
+  });
+  navBtns.forEach((btn, i) => {
+    btn.classList.toggle('active', sections[i] === current);
+  });
+}, { passive: true });
 </script>
 </body>
 </html>
